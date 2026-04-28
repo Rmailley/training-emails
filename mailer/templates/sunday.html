@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color: #1a1a1a; background: #f5f5f5; margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 0 auto; background: #ffffff;">
+
+  <div style="background: {{ phase_color }}; padding: 16px 24px; color: white;">
+    <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85;">Phase {{ phase }}: {{ phase_name }}</div>
+    <div style="font-size: 20px; font-weight: 600; margin-top: 4px;">Week {{ week }} recap + Week {{ week + 1 }} preview</div>
+    <div style="font-size: 14px; opacity: 0.75; margin-top: 2px;">{{ date.strftime('%A, %B %-d') }}</div>
+  </div>
+
+  <div style="padding: 20px 24px;">
+
+    <!-- Compliance rate -->
+    <div style="text-align: center; padding: 20px; background: #f8f8f8; border-radius: 8px; margin-bottom: 20px;">
+      {% set rate = compliance_stats.rate %}
+      <div style="font-size: 36px; font-weight: 700; color: {% if rate is not none and rate >= 80 %}#4a9e4a{% elif rate is not none and rate >= 60 %}#c8860a{% else %}#c85a0a{% endif %};">
+        {% if rate is not none %}{{ "%.0f"|format(rate) }}%{% else %}—{% endif %}
+      </div>
+      <div style="font-size: 13px; color: #888; margin-top: 4px;">
+        Week {{ week }} compliance · {{ compliance_stats.compliant_days }}/{{ compliance_stats.total_days }} training days logged
+        {% if compliance_stats.vacation_days > 0 %}
+        <br><span style="font-style: italic;">({{ compliance_stats.vacation_days }} vacation day{{ 's' if compliance_stats.vacation_days != 1 else '' }} excluded)</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Vacation context -->
+    {% if vacation_context %}
+    <div style="background: #f0f4ff; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; font-size: 14px; color: #2c3e70;">
+      {{ vacation_context }}
+    </div>
+    {% endif %}
+
+    <!-- Summary text -->
+    <div style="font-size: 15px; color: #222; line-height: 1.6; margin-bottom: 24px;">
+      {{ summary_text | replace('\n', '<br>') }}
+    </div>
+
+    <!-- Week ahead -->
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #888; margin-bottom: 8px;">Week {{ week + 1 }} Ahead</div>
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
+      {% for row in week_ahead %}
+      <tr style="border-bottom: 1px solid #f0f0f0;">
+        <td style="padding: 7px 8px; font-weight: 500; width: 36px;">{{ row.weekday }}</td>
+        <td style="padding: 7px 8px; color: #888; width: 36px;">{{ row.date.strftime('%-d') }}</td>
+        <td style="padding: 7px 8px; color: {% if row.day_type == 'vacation' %}#888{% elif row.day_type == 'rest' %}#bbb{% else %}#333{% endif %}; font-style: {% if row.day_type in ('vacation', 'rest') %}italic{% else %}normal{% endif %};">
+          {{ row.day_type | replace('_', ' ') | title if row.day_type in ('vacation', 'rest', 'reentry_1', 'reentry_2', 'reentry_3') else '' }}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <!-- Upcoming vacation alert -->
+    {% if upcoming_vacation %}
+    <div style="background: #fff8e1; border-left: 4px solid #f9a825; padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 14px; color: #555;">
+      <strong>{{ upcoming_vacation.name }}</strong> starts {{ upcoming_vacation.start_date.strftime('%B %-d') }} — {{ (upcoming_vacation.start_date - date).days }} days away.
+    </div>
+    {% endif %}
+
+  </div>
+
+  <div style="background: #f5f5f5; padding: 12px 24px; font-size: 12px; color: #999; text-align: center;">
+    Week {{ week }} of 52 · Phase {{ phase }}: {{ phase_name }}
+  </div>
+
+</div>
+</body>
+</html>

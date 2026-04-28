@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color: #1a1a1a; background: #f5f5f5; margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 0 auto; background: #ffffff;">
+
+  <div style="background: #5c4a8a; padding: 16px 24px; color: white;">
+    <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75;">Week {{ week }} of 52</div>
+    <div style="font-size: 20px; font-weight: 600; margin-top: 4px;">{{ vac.name }} starts tomorrow</div>
+    <div style="font-size: 14px; opacity: 0.75; margin-top: 2px;">{{ vac.location }}</div>
+  </div>
+
+  <div style="padding: 20px 24px;">
+
+    <!-- Iceland benchmark flag -->
+    {% if benchmark_flag %}
+    <div style="background: #fdecea; border: 1px solid #e53935; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; font-size: 14px; color: #b71c1c; font-weight: 500;">
+      ⚠ {{ benchmark_flag }}
+    </div>
+    {% endif %}
+
+    <!-- Mode summary -->
+    <div style="margin-bottom: 20px;">
+      <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; color: #888; margin-bottom: 8px;">Vacation Mode</div>
+      <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;">{{ vac.mode | replace('_', ' ') | title }}</div>
+      <div style="font-size: 14px; color: #555; margin-bottom: 8px;">{{ vac.notes }}</div>
+      <div style="font-size: 13px; color: #4a9e4a;">✓ Available: {{ vac.available | join(', ') }}</div>
+      <div style="font-size: 13px; color: #888;">✗ Dropped: {{ vac.dropped | join(', ') }}</div>
+    </div>
+
+    <!-- Reentry preview -->
+    <div style="background: #f8f8f8; border-radius: 8px; padding: 14px 16px; font-size: 14px; color: #444;">
+      <div style="font-weight: 600; margin-bottom: 6px;">Reentry protocol</div>
+      When you're back on {{ reentry_start.strftime('%B %-d') }}, the system walks you through {{ vac.reentry_days }} easy days before resuming the full program.
+    </div>
+
+    <div style="margin-top: 20px; font-size: 14px; color: #555; font-style: italic;">
+      You don't need to feel guilty about anything you miss on this trip.
+    </div>
+
+  </div>
+
+  <div style="background: #f5f5f5; padding: 12px 24px; font-size: 12px; color: #999; text-align: center;">
+    Week {{ week }} of 52 · {{ vac.name }}
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color: #1a1a1a; background: #f5f5f5; margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 0 auto; background: #ffffff;">
+
+  <div style="background: #4a6741; padding: 16px 24px; color: white;">
+    <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75;">Back from {{ vac.name }} · Week {{ week }} of 52</div>
+    <div style="font-size: 20px; font-weight: 600; margin-top: 4px;">Reentry Day {{ day_num }} of {{ vac.reentry_days }}</div>
+    <div style="font-size: 14px; opacity: 0.75; margin-top: 2px;">{{ date.strftime('%A, %B %-d') }}</div>
+  </div>
+
+  <div style="padding: 20px 24px;">
+
+    {% if whoop %}
+    <div style="background: #f8f8f8; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px;">
+      <span style="color: {{ whoop_color }}; font-weight: 600;">Recovery: {{ whoop.recovery_score }}%</span>
+      {% if whoop.hrv_ms %}&ensp;·&ensp;HRV: {{ "%.0f"|format(whoop.hrv_ms) }}ms{% endif %}
+      {% if whoop.sleep_performance %}&ensp;·&ensp;Sleep: {{ whoop.sleep_performance }}%{% endif %}
+    </div>
+    {% endif %}
+
+    {% if coaching_note %}
+    <div style="border-left: 3px solid #4a6741; padding: 8px 16px; margin-bottom: 20px; color: #333; font-size: 14px;">
+      {{ coaching_note }}
+    </div>
+    {% endif %}
+
+    {% for block in session.morning %}
+    <div style="border: 1px solid #eee; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px;">
+      <div style="font-weight: 600; font-size: 15px; margin-bottom: 8px;">{{ block.name }} <span style="font-weight: 400; font-size: 13px; color: #888;">{{ block.duration_min }} min</span></div>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px; color: #333;">
+        {% for ex in block.exercises %}
+        <li style="margin-bottom: 3px;">{{ ex.description }}{% if ex.load %} <span style="color: #888;">@ {{ ex.load }}</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+
+    <div style="margin-top: 16px; font-size: 13px; color: #666;">
+      Full program resumes {{ full_resume.strftime('%A, %B %-d') }}.
+    </div>
+
+    <div style="margin-top: 24px; background: #f0f4f0; border-radius: 8px; padding: 14px 16px; font-size: 14px; color: #2c4a2c; text-align: center;">
+      Reply to log today's session.
+    </div>
+
+  </div>
+
+  <div style="background: #f5f5f5; padding: 12px 24px; font-size: 12px; color: #999; text-align: center;">
+    Week {{ week }} of 52 · Reentry from {{ vac.name }}
+  </div>
+
+</div>
+</body>
+</html>
